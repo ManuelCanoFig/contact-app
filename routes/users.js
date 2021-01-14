@@ -27,7 +27,7 @@ router.post('/', [
 
       let user = await User.findOne({email: email});
       if(user){
-         res.status(400).json({msg: 'Email already taken'})
+         res.status(400).json({msg: 'Email already taken'});
       }
 
       user = new User({
@@ -51,7 +51,7 @@ router.post('/', [
          expiresIn: 36000
       }, (error, token) =>{
          if(error) throw error;
-         res.json({'token':token});
+         res.json({token});
       });
        
     } catch (error) {
