@@ -8,7 +8,7 @@ import {
    CLEAR_FILTER
 } from '../types'
 
-export default (state,action) =>{
+export default (state,action) => {
    switch (action.type) {
       case ADD_CONTACT:
          return{
@@ -25,6 +25,14 @@ export default (state,action) =>{
             ...state,
             contacts: state.contacts.filter(contact => contact.id !== action.payload)
          }
+      case FILTER_CONTACTS:
+         return{
+            ...state,
+            filtered: state.contacts.filter(contact =>{
+               const regex = new RegExp(`${action.payload}`, 'gi');
+               return contact.name.match(regex) || contact.email.match(regex);
+            })
+         }
       case SET_CURRENT:
          return{
             ...state,
@@ -34,6 +42,11 @@ export default (state,action) =>{
          return{
             ...state,
             current: null
+         }
+      case CLEAR_FILTER: 
+         return{
+            ...state,
+            filtered: null
          }
       default:
          return state;
