@@ -29,10 +29,7 @@ const AuthState = props =>{
    //load user
    const loadUser = async () =>{
       //This call the function setAuthToken to create a header named x-auth-token
-      if(localStorage.token){
          setAuthToken(localStorage.token);
-      }
-
       try {
          const res = await axios.get('api/auth');
          dispatch({
