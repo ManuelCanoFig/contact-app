@@ -1,4 +1,6 @@
 import React, {useState,useContext,useEffect}  from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import AlertContext from '../../context/alert/alertContext'
 import AuthContext from '../../context/auth/authContext'
 
@@ -21,7 +23,7 @@ const Login = (props) => {
       //eslint-disable-next-line
    }, [error, isAuthenticated,props.history]);
 
-   const [user, setUser] = useState({
+  /* const [user, setUser] = useState({
       email: '',
       password: ''
    });
@@ -39,21 +41,45 @@ const Login = (props) => {
       }else{
          login(user);
       }
-   }
+   }*/
+   
+   const formik = useFormik({
+      initialValues: {
+        email: '',
+        password:''
+      },
+      validationSchema: Yup.object({
+         email: Yup.string()
+         .email('Invalid email address')
+         .required('Required'),
+       password: Yup.string()
+          .min(6,'Password should be at least 6 characteres')
+          .required('Required'),
+      }),
+      onSubmit: values => {
+        login(values)
+      },
+    });
 
    return (
       <div className='form-container'>
          <h1>
            Account <span className="text-primary"> Login</span>
          </h1>
-         <form onSubmit={onSubmit}>
+         <form onSubmit={formik.handleSubmit}>
             <div className="form-group">
                <label htmlFor='email'>Email</label>
-               <input type='email' name='email' value={email} onChange={onChange}/>
+               <input id='email' name='email' type='email' onChange={formik.handleChange} value={formik.values.email} />
+               {
+               formik.touched.email && formik.errors.email ? (<div>{formik.errors.email}</div>) : null
+               }
             </div>
             <div className="form-group">
                <label htmlFor='password'>Password</label>
-               <input type='password' name='password' value={password} onChange={onChange}/>
+               <input id='password' name='password' type='password' onChange={formik.handleChange} value={formik.values.password} error={formik.errors.password}/>
+               {
+               formik.touched.password && formik.errors.password ? (<div>{formik.errors.password}</div>) : null
+               }
             </div>
             <input type='submit' value='Login' className='btn btn-primary btn-block'/>
          </form>
